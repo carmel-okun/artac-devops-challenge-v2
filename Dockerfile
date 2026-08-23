@@ -1,26 +1,27 @@
-FROM python:3.12-slim AS builder
+FROM python:3.12.14-slim AS builder
 
 WORKDIR /app
 
 COPY requirements.txt .
 
-# Install into a venv to isolate the installed deps and copy just this dir into the final stage
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.12-slim
+FROM python:3.12.14-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-# Copy the pre-built venv dir
 COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
-COPY . .
+RUN useradd --system --no-create-home appuser
 
-RUN useradd --system --no-create-home appuser \
-    && chown -R appuser:appuser /app
+COPY --chown=appuser:appuser . .
+
 USER appuser
 
 EXPOSE 8080
