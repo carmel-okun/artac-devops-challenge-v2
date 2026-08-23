@@ -7,7 +7,7 @@
 ---------
 AI Tools:
 ---------
-- Claude Chat
+- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, 
 - 
 
 -------------------------------------
@@ -70,7 +70,10 @@ issue: Claude gave me a broken curl.exe command since windows cmd / PowerShell e
 My honest estimate of time saved vs. doing it manually
 ------------------------------------------------------
 - Part 1: Get It Running:
-I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes finding the answer in google when pasting the error lines.
+I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes up to half an hour finding the answer in google when pasting the error lines.
+
+- Part 2: Assess the Codebase:
+I used Claude Chat for suggestions on how to improve the Dockerfile by using multi stage setup, and a slim python image as base image, without AI I would need to search online for a slim python image, check if it misses any deps for our "python ML prediction API app", and I would probably run much more test containers, so maybe a couple of hours more.
 
 ----------------------------------
 Total time spent on the assignment
