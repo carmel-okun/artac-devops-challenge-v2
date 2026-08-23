@@ -127,5 +127,6 @@ total: 7 hours
 23/8/26
 12:00 - 12:37
 13:14 - 14:24
-14:44 - 
-(optimizing the Dockerfile - 1 hours and 47 minutes)
+14:44 - 16:57
+(optimizing the Dockerfile - 4 hours)
+
