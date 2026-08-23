@@ -81,4 +81,5 @@ Total time spent on the assignment
 total: 7 hours
 
 23/8/26
-12:00 - 
+12:00 - 12:37
+13:14 - 
