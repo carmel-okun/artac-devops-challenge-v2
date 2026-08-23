@@ -66,3 +66,19 @@ PS C:\Users\carmel\...\ArtAc\artac-devops-challenge-v2>
 
 issue: Claude gave me a broken curl.exe command since windows cmd / PowerShell escaping syntax doesn't work like in bash
 
+------------------------------------------------------
+My honest estimate of time saved vs. doing it manually
+------------------------------------------------------
+- Part 1: Get It Running:
+I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes finding the answer in google when pasting the error lines.
+
+----------------------------------
+Total time spent on the assignment
+----------------------------------
+22/8/26
+10:40 - 13:00 (Assessing the whole assignment - 2 hours 40 minutes)
+13:40 - 18:00 (Solving Part 1 - 4 hours 20 minutes)
+total: 7 hours
+
+23/8/26
+12:00 - 
