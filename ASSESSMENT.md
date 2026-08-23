@@ -45,8 +45,9 @@ AttributeError: 'LogisticRegression' object has no attribute 'multi_class'
 This is a BUG
 
 3. Contractor's reasoning:
-The DECISIONS.md mentioned the pinned scikit-learn version to 1.6.1 for stability, I disagree with their rationale since it breaks the functionality of /predict endpoint with is the essence of the app
+The DECISIONS.md mentioned the pinned scikit-learn version to 1.6.1 for stability, I disagree with their rationale since it breaks the functionality of /predict endpoint which is the essence of the app
 
-4. What I did:
-Since the bug is in the code side I fixed it by asking Claude if I'm right about the source of the issue being the scikit-learn version in requirements.txt, and how should I mitigate it, then I tried to pin the version to 1.8.0 as implied in the WARNs in the container logs,
-because the /predict endpoint doesn't work otherwise
+4. What I did, and why?:
+Since the bug is in the code side I fixed it by asking Claude if I'm right about the source of the issue being the scikit-learn version in requirements.txt, and how should I mitigate it, then I tried to pin the version to 1.8.0 as implied in the WARNs in the container logs, tested it and it works!
+why I did it? because the /predict endpoint doesn't work otherwise
+
