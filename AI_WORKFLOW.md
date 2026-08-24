@@ -7,18 +7,59 @@
 ---------
 AI Tools:
 ---------
-- Claude Chat
+- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, and asking for further improvements on the Dockerfile. I used Claude for learning how CI/CD pipelines work in GitHub since my knowledge is only with Jenkins and Groovy files.
 - 
 
 -------------------------------------
 Examples of prompts that worked well:
 -------------------------------------
-- I have a home assignment for a job, I got a github repo with a python ML prediction API app and some of it's deployment infrastructure files such as Dockerfile, terraform/, .github/workflows/ci.yml, first I tried to build the docker image and run it to test it's endpoints (/predict, /health, /ready) on my windows pc with docker desktop installed, the build and run docker commands finish successfully, now write for me the command to test each endpoint, here is the info of the endpoint given to me:
+- I have a home assignment for a job, I got a github repo with a python ML prediction API app and some of it's deployment infrastructure files such as Dockerfile, terraform/, .github/workflows/ci.yml, first I tried to build the docker image and run it to test it's endpoints (/predict, /health, /ready) on my windows pc with docker desktop installed, the build and run docker commands finish successfully, now write for me the command to test each endpoint, here is the info of the endpoints given to me:
+```
 A FastAPI service that serves a pre-trained scikit-learn sentiment classifier.
 Endpoint    Method    Description
 /predict    POST    Accepts {"text": "..."}, returns {"sentiment": "positive/negative", "confidence": 0.92}
 /health    GET    Liveness probe — returns 200 if the server process is running
 /ready    GET    Readiness probe — returns 200 only after the model is loaded and ready to serve
+```
+
+- ok so I want to use this Dockerfile:
+```
+FROM python:3.12-slim AS builder
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+# Install into a venv to isolate the installed deps and copy just this dir into the final stage
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Copy the pre-built venv dir
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY . .
+
+RUN useradd --system --no-create-home appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+```
+do you have any suggestions on how to improve it and make it more production-ready?
+can we combine some layers maybe?
+
+- ok now I was to address the CI/CD flow we currently have, in the repo I have the file .github/workflows/ci.yml, my knowledge in only with groovy files in Jenkins, explain to me how it works for GitHub, is the directory .github/workflows is a convention for the CI/CD files in a GitHub repo? how do I run it? where? and explain to me the syntax of the ci.yml file, I see "uses: actions/checkout@v4" and "uses: docker/setup-buildx-action@v3" and more
 
 ----------------------------------------------------------------------------
 Example where AI gave me something wrong or suboptimal, and how I caught it:
@@ -70,7 +111,16 @@ issue: Claude gave me a broken curl.exe command since windows cmd / PowerShell e
 My honest estimate of time saved vs. doing it manually
 ------------------------------------------------------
 - Part 1: Get It Running:
-I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes finding the answer in google when pasting the error lines.
+
+I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes up to half an hour finding the answer in google when pasting the error lines.
+
+- Part 2: Assess the Codebase:
+
+Dockerfile:
+I used Claude Chat for suggestions on how to improve the Dockerfile by using multi stage setup, and a slim python image as base image, without AI I would need to search online for a slim python image, check if it misses any deps for our "python ML prediction API app", and I would probably run much more test containers, so maybe a couple of hours more.
+
+CI/CD:
+I used Claude Chat for learning the equvalents in GitHub Actions to Jenkins, without  AI I would need to search each unfamiliar line in .github/workflows/ci.yml online until I manage to wrap my head around the idea which would probably take another hour, and if I wouldn't have used AI to help me use the correct syntax in order to modify the file as I wanted, I would need to trigger the build much more times to get errors to fix and that would be at least another hour or two. 
 
 ----------------------------------
 Total time spent on the assignment
@@ -81,4 +131,10 @@ Total time spent on the assignment
 total: 7 hours
 
 23/8/26
-12:00 - 
+12:00 - 12:37
+13:14 - 14:24
+14:44 - 16:57
+(optimizing the Dockerfile - 4 hours)
+
+24/8/26
+9:31 - 
