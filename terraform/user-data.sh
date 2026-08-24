@@ -22,6 +22,13 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
 systemctl enable docker
 systemctl start docker
 
+DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1) || true
+if [ -n "$DEFAULT_USER" ]; then
+  usermod -aG docker "$DEFAULT_USER"
+else
+  echo "WARNING: could not determine default user for uid 1000, skipping docker group add"
+fi
+
 echo "=== Pulling and running application ==="
 docker pull ${docker_image}
 docker run -d \

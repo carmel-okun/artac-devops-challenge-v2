@@ -7,8 +7,7 @@
 ---------
 AI Tools:
 ---------
-- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, and asking for further improvements on the Dockerfile. I used Claude for learning how CI/CD pipelines work in GitHub since my knowledge is only with Jenkins and Groovy files.
-- 
+- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, and what is the use on DynamoDB with terraform state files, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, and asking for further improvements on the Dockerfile. I used Claude for learning how CI/CD pipelines work in GitHub since my knowledge is only with Jenkins and Groovy files. I also used Claude Chat for summarizing and describing the "Setup / Deployment Instructions" in the README.md file with all we discussed in the history of our conversation.
 
 -------------------------------------
 Examples of prompts that worked well:
@@ -114,13 +113,19 @@ My honest estimate of time saved vs. doing it manually
 
 I found the related lines in the container logs pointing to scikit-learn pinned version right away, but without checking with AI if that is the true reason and that I should actually pin to the version that the app was built with and that it is in fact version 1.8.0 it would take me a few more minutes up to half an hour finding the answer in google when pasting the error lines.
 
-- Part 2: Assess the Codebase:
+- Part 3: Production-Ready Deployment:
 
 Dockerfile:
 I used Claude Chat for suggestions on how to improve the Dockerfile by using multi stage setup, and a slim python image as base image, without AI I would need to search online for a slim python image, check if it misses any deps for our "python ML prediction API app", and I would probably run much more test containers, so maybe a couple of hours more.
 
 CI/CD:
-I used Claude Chat for learning the equvalents in GitHub Actions to Jenkins, without  AI I would need to search each unfamiliar line in .github/workflows/ci.yml online until I manage to wrap my head around the idea which would probably take another hour, and if I wouldn't have used AI to help me use the correct syntax in order to modify the file as I wanted, I would need to trigger the build much more times to get errors to fix and that would be at least another hour or two. 
+I used Claude Chat for learning the equvalents in GitHub Actions to Jenkins, without  AI I would need to search each unfamiliar line in .github/workflows/ci.yml online until I manage to wrap my head around the idea which would probably take another hour, and if I wouldn't have used AI to help me use the correct syntax in order to modify the file as I wanted, I would need to trigger the build much more times to get errors to fix and that would be at least another hour or two.
+
+Infrastructure:
+I used Claude Chat for asking questions on what is Free-Tier and what not, and for asking how to get the GitHub Action's runner IP ranges which saved me at least an hour looking for it online and testing it until I would figure out those ranges change over time.
+
+Setup / Deployment Instructions:
+I used Claude Chat for writing the "Setup / Deployment Instructions" in the README.md file which alone would have taken me around an hours and still won't be as precise.
 
 ----------------------------------
 Total time spent on the assignment
@@ -128,7 +133,6 @@ Total time spent on the assignment
 22/8/26
 10:40 - 13:00 (Assessing the whole assignment - 2 hours 40 minutes)
 13:40 - 18:00 (Solving Part 1 - 4 hours 20 minutes)
-total: 7 hours
 
 23/8/26
 12:00 - 12:37
@@ -137,4 +141,15 @@ total: 7 hours
 (optimizing the Dockerfile - 4 hours)
 
 24/8/26
-9:31 - 
+9:31 - 12:00
+13:10 - 15:02
+(optimizing CI/CD - 4 hours 21 minutes)
+
+15:15 - 16:00
+19:00 - 00:22
+(optimizing TF - 6 hours 7 minutes)
+
+25/8/26
+00:20 - 1:40 (README.md instructions - 1 hour 20 minutes)
+
+Total: 22 hours 48 minutes

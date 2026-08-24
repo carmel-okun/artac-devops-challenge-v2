@@ -10,10 +10,16 @@ variable "project_name" {
   default     = "sentiment-api"
 }
 
+variable "ami_id" {
+  description = "AMI ID (Ubuntu 22.04 LTS from January 2024)"
+  type        = string
+  default     = "ami-0c7217cdde317cfec"
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "app_port" {

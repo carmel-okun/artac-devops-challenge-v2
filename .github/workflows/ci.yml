@@ -5,16 +5,21 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  EC2_IP: "<paste terraform output instance_public_ip here>"
+  APP_PORT: 8080
+  APP_NAME: sentiment-api
 
 jobs:
   build:
     name: Build Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +39,7 @@ jobs:
           context: .
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -78,13 +83,28 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [build]
+    needs: [test, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
-        run: |
-          echo "TODO: Implement deployment"
-          echo "This step should SSH into the EC2 instance and deploy the new container"
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+            docker ps
+            docker images
+            docker stop ${{ env.APP_NAME }} || true
+            docker rm ${{ env.APP_NAME }} || true
+            docker image prune -af --filter "until=24h"
+            docker pull $IMAGE
+            docker run -d \
+              --name ${{ env.APP_NAME }} \
+              --restart unless-stopped \
+              -p ${{ env.APP_PORT }}:${{ env.APP_PORT }} \
+              $IMAGE
 
-#TODO: make deploy need test and security-scan, add secrets and variables to GitHub, separate CI and CD?, add tf to deploy,
+
