@@ -98,12 +98,12 @@ jobs:
             IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
             docker ps
             docker images
-            docker stop ${{ APP_NAME }} || true
-            docker rm ${{ APP_NAME }} || true
+            docker stop ${{ env.APP_NAME }} || true
+            docker rm ${{ env.APP_NAME }} || true
             docker image prune -af --filter "until=24h"
             docker pull $IMAGE
             docker run -d \
-              --name ${{ APP_NAME }} \
+              --name ${{ env.APP_NAME }} \
               --restart unless-stopped \
               -p ${{ env.APP_PORT }}:${{ env.APP_PORT }} \
               $IMAGE
