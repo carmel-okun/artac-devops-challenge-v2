@@ -88,3 +88,20 @@ The DECISIONS.md didn't mention it.
 I modified it to a specific patch version tag (python:3.12.14-slim) instead of pinning to a specific sha256.
 Why I did it? because it is more precise than "python:3.12-slim" and more clear to the eye than pinnning a long sha256.
 
+------------
+Fixing CI/CD
+------------
+1. What I found:
+In the "Build Image" job in the "Build and push" step, the docker push command failed with:
+```
+Error: buildx failed with: ERROR: failed to build: failed to solve: failed to push ghcr.io/carmel-okun/artac-devops-challenge-v2:latest: denied: installation not allowed to Create organization package
+```
+meaning the action was denied since it was missing the write permission for packages.
+2. Classification:
+This is a Bug.
+3. Contractor's reasoning:
+The DECISIONS.md didn't mention it.
+4. What I did, and why?:
+I fixed it by adding the "permissions:" block to the specific required job, that way the docker push command has the necessary permissions to finish the action while this write permission is scoped only to that job instead of editing the global GitHub Actions settings, which is a production best practice.
+Why I did it? because without this permission, the docker push command failed, and I scoped it to only this job in order to follow and keep security best practices where open permissions are allowed only to what need it.
+
