@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -85,3 +86,5 @@ jobs:
         run: |
           echo "TODO: Implement deployment"
           echo "This step should SSH into the EC2 instance and deploy the new container"
+
+#TODO: make deploy need test and security-scan, add secrets and variables to GitHub, separate CI and CD?, add tf to deploy,
