@@ -78,9 +78,9 @@ The DECISIONS.md didn't mention it.
 I modified it to a specific patch version tag (python:3.12.14-slim) instead of pinning to a specific sha256.
 Why I did it? because it is more precise than "python:3.12-slim" and more clear to the eye than pinnning a long sha256.
 
-------------
-Fixing CI/CD
-------------
+----------------
+Optimizing CI/CD
+----------------
 ### docker push failed
 1. What I found:
 In the "Build Image" job in the "Build and push" step, the docker push command failed with:
@@ -121,9 +121,9 @@ The DECISIONS.md mention the use of this configuration and I agree with their ra
 I kept it as is, although if we decide to for example, keep track on those findings, it is possible to remove that configuration and instead use a ".trivyignore" file with a list of CVE IDs (along with a name and a comment/reference) we already encountered and automatically add each new one to the list, this way we keep those findings documented while allowing a clear CI/CD flow.
 Why I did it? because there's no reason to block CI on unfixable issues.
 
---------------------------
-Fixing Infrastructure (TF)
---------------------------
+------------------------------
+Optimizing Infrastructure (TF)
+------------------------------
 ### Instance Type
 1. What I found:
 The given instance type "t2.micro" is not eligible for Free Tier.
