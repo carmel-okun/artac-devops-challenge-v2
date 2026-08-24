@@ -2,15 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [Part-3--Production-Ready-Deployment-(15%)]
+    branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  EC2_IP: "3.81.39.123"
+  EC2_IP: "<EC2 IP from output of TF instance_public_ip>"
   APP_PORT: 8080
   APP_NAME: sentiment-api
 
@@ -38,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/Part-3--Production-Ready-Deployment-(15%)' }}
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -85,7 +84,7 @@ jobs:
   deploy:
     name: Deploy
     needs: [test, security-scan]
-    if: github.ref == 'refs/heads/Part-3--Production-Ready-Deployment-(15%)' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
@@ -109,9 +108,3 @@ jobs:
               $IMAGE
 
 
-#TODO: try to wire the output of terraform to the env.EC2_IP
-#TODO: add secrets and variables to GitHub,
-#TODO: separate CI and CD?,
-#TODO: address the annotations about "Node.js 20 is deprecated",
-#TODO: remove "workflow_dispatch:",
-#TODO: switch "on:", "push:" and "if:" back to using only "main" branch

@@ -7,6 +7,14 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  # here is where and how I would configure the s3 remote backend
+  # backend "s3" {
+  #   bucket         = "artac-terraform-state"
+  #   key            = "${var.project_name}/terraform.tfstate"
+  #   region         = "us-east-1"
+  #   encrypt        = false
+  # }
 }
 
 provider "aws" {
@@ -47,7 +55,7 @@ resource "aws_security_group" "app" {
 }
 
 resource "aws_instance" "app" {
-  ami                    = "ami-0c7217cdde317cfec"
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   key_name               = var.ssh_key_name
   vpc_security_group_ids = [aws_security_group.app.id]

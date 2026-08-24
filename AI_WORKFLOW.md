@@ -7,7 +7,7 @@
 ---------
 AI Tools:
 ---------
-- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, and asking for further improvements on the Dockerfile. I used Claude for learning how CI/CD pipelines work in GitHub since my knowledge is only with Jenkins and Groovy files.
+- Claude Chat - I mostly used Claude Chat for some general questions in order to decide which solution is best, for example whether it is best practice to use python venv for the pip install command in the Dockerfile compared to using --target attribute, and what is the use on DynamoDB with terraform state files, I also used Claude Chat for writing for me some commands such as the curl.exe/PowerShell command for testing the app's endpoints, and asking for further improvements on the Dockerfile. I used Claude for learning how CI/CD pipelines work in GitHub since my knowledge is only with Jenkins and Groovy files.
 - 
 
 -------------------------------------
@@ -168,5 +168,5 @@ total: 7 hours
 (fixing CI/CD - 4 hours 21 minutes)
 
 15:15 - 16:00
-19:00 - 
-(fixing TF - )
+19:00 - 00:22
+(fixing TF - 6 hours 7 minutes)

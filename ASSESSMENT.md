@@ -3,16 +3,6 @@
 3. Contractor's reasoning — does the DECISIONS.md mention it? Do you agree or disagree with their rationale?
 4. What you did — did you fix it, keep it, or modify it? Why?
 
--------------------------
-Building the docker image
--------------------------
-1. 
-
-----------------------------
-Running the docker container
-----------------------------
-1. 
-
 -----------------------
 Testing the 3 endpoints
 -----------------------
@@ -152,7 +142,7 @@ Why I did it? because when I tried to set the instance type to t2.micro "terrafo
 Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 8f72860c-62c6-4e68-ad70-64cf4448767f, api error InvalidParameterCombination: The specified instance type is not eligible for Free Tier. For a list of Free Tier instance types, run 'describe-instance-types' with the filter 'free-tier-eligible=true'.
 ```
 
-### Adding user ubuntu to docker group
+### Adding default user to docker group
 1. What I found:
 The given user-data.sh configure docker but not adding the default user to docker group, so each docker command will need to use "sudo".
 2. Classification:
@@ -172,3 +162,36 @@ fi
 to user-data.sh right after installing docker.
 Why I did it? because otherwise each docker command will need to use "sudo".
 
+### Pinned AMI
+1. What I found:
+The given terraform resource "aws_instance" is pinned to a specific AMI.
+2. Classification:
+This is an Intentional Trade-off.
+3. Contractor's reasoning:
+The DECISIONS.md mention it ensures reproducible infrastructure since it caused incidents in the past, and I agree.
+4. What I did, and why?:
+I modified it to use a variable called "ami_id" defaulted to the same working AMI, so it would be updated periodically after verifying compatibility with the "user-data.sh".
+Why I did it? because otherwise, if it would be fully automatic, there's a change for more incidents like this in the future.
+
+### Local Terraform state
+1. What I found:
+The given TF runs with local state file.
+2. Classification:
+This is something that Needs Improvement.
+3. Contractor's reasoning:
+The DECISIONS.md mention it is a single-operator deployment and adding S3 backend and DynamoDB locking is overkill for one person running terraform apply, and I half disagree and half agree, s3 is the best practice, DynamoDB is an overkill for one person running terraform apply.
+4. What I did, and why?:
+I modified TF to use an s3 remote backend to store the state files, but kept not using DynamoDB.
+Why I did it? because it doesn't matter how many people use this terraform, if we want this to be a production-ready we need to have the state files stored in s3 remotely so even if something would happen to this one person's computer, the state files are safe, and if truly only one person is running terraform apply then there is no need for DynamoDB to provide locking to prevent two terraform apply runs happen at the same time.
+NOTE: I added the "backend" block to "terraform" block in terraform/main.tf commented out so it won't charge any money
+
+### SSH access
+1. What I found:
+The given TF has the resource "aws_security_group" configured with an ingress allows SSH from 0.0.0.0/0.
+2. Classification:
+This is something that Needs Improvement.
+3. Contractor's reasoning:
+The DECISIONS.md mention it was needed for initial setup but in order for it to be production-ready it is needed to be locked down further, so I agree but it needs improvement.
+4. What I did, and why?:
+I kept the ingress as is for this devops-challenge, since GitHub Action's runner IP ranges are too dynamic and large, although I would suggest to either use a self-hosted runner with a fixed IP, or switch to AWS Systems Manager (SSM) which would remove the need for inbound SSH port from GitHub and then we could lock the SSH port to only the office IP range.
+Why I did it? because otherwise everyone from anywhere could access the ec2 via SSH which is not a security best practice.

@@ -99,16 +99,9 @@ Anything extra you think demonstrates your skills or understanding. Examples: Do
 
 ---
 
-## What to Submit
+## Set/Deployment Instructions
 
-Your forked repository should contain:
-- All original application source code (unmodified `app/` and `models/`)
-- Your improved `Dockerfile` and `.dockerignore`
-- Working CI/CD pipeline (`.github/workflows/`)
-- Terraform configuration (`terraform/`) with `plan-output.txt`
-- **`ASSESSMENT.md`** — your assessment of the inherited codebase
-- **`AI_WORKFLOW.md`** — your AI usage documentation
-- Updated `README.md` — replace this section with your own setup/deployment instructions
+"to update the AMI, verify compatibility with user-data.sh in a test environment first, then bump var.ami_id explicitly."
 
 ---
 
