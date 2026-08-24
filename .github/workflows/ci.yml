@@ -11,6 +11,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   EC2_IP: "98.91.235.113"
+  APP_PORT: 8080
 
 jobs:
   build:
@@ -86,9 +87,20 @@ jobs:
     if: github.ref == 'refs/heads/Part-3--Production-Ready-Deployment-(15%)' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: ssh to EC2 # Deploy to EC2
-        run: ssh -i "${{ secrets.EC2_SSH_PRIVATE_KEY }}" ubuntu@${{ env.EC2_IP }} "sudo docker ps"
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            docker ps
+            sudo docker ps
+            sudo docker images
+            sudo docker info
 
+
+#TODO: try to wire the output of terraform to the env.EC2_IP
 #TODO: add secrets and variables to GitHub,
 #TODO: separate CI and CD?,
 #TODO: address the annotations about "Node.js 20 is deprecated",
