@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [Part-3--Production-Ready-Deployment-(15%)]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/Part-3--Production-Ready-Deployment-(15%)' }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -79,7 +79,7 @@ jobs:
   deploy:
     name: Deploy
     needs: [build]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/Part-3--Production-Ready-Deployment-(15%)' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
@@ -87,4 +87,10 @@ jobs:
           echo "TODO: Implement deployment"
           echo "This step should SSH into the EC2 instance and deploy the new container"
 
-#TODO: make deploy need test and security-scan, add secrets and variables to GitHub, separate CI and CD?, add tf to deploy,
+#TODO: make deploy need test and security-scan,
+#TODO: add secrets and variables to GitHub,
+#TODO: don't use latest tag,
+#TODO: separate CI and CD?,
+#TODO: add tf to deploy,
+#TODO: remove "workflow_dispatch:",
+#TODO: switch "on:", "push:" and "if:" back to using only "main" branch
