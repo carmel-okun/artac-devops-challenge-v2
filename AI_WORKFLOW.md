@@ -146,7 +146,7 @@ Dockerfile:
 I used Claude Chat for suggestions on how to improve the Dockerfile by using multi stage setup, and a slim python image as base image, without AI I would need to search online for a slim python image, check if it misses any deps for our "python ML prediction API app", and I would probably run much more test containers, so maybe a couple of hours more.
 
 CI/CD:
-I used Claude Chat for learning the equvalents in GitHub Actions to Jenkins, without  AI I would need to search each unfamiliar line in .github/workflows/ci.yml online until I manage to wrap my head around the idea which would probably take another hour, and if I wouldn't have used AI to help me use the correct syntax in order to modify the file as I wanted, I would need to trigger the build much more times to get errors to fix and that would be at least another hour or two. 
+I used Claude Chat for learning the equvalents in GitHub Actions to Jenkins, without  AI I would need to search each unfamiliar line in .github/workflows/ci.yml online until I manage to wrap my head around the idea which would probably take another hour, and if I wouldn't have used AI to help me use the correct syntax in order to modify the file as I wanted, I would need to trigger the build much more times to get errors to fix and that would be at least another hour or two.
 
 ----------------------------------
 Total time spent on the assignment
@@ -164,5 +164,8 @@ total: 7 hours
 
 24/8/26
 9:31 - 12:00
-13:10 - 
-(fixing CI/CD)
+13:10 - 15:02
+(fixing CI/CD - 4 hours 21 minutes)
+
+15:15 - 
+(fixing TF - )

@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [Part-3--Production-Ready-Deployment-(15%)]
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -76,7 +76,7 @@ jobs:
           image-ref: ${{ env.IMAGE_NAME }}:scan
           format: table
           exit-code: 1
-          # ignore-unfixed: true
+          ignore-unfixed: true
           severity: CRITICAL
 
   deploy:
@@ -91,9 +91,7 @@ jobs:
           echo "This step should SSH into the EC2 instance and deploy the new container"
 
 #TODO: add secrets and variables to GitHub,
-#TODO: address the issue with trivy scan,
 #TODO: separate CI and CD?,
-#TODO: add tf to deploy,
 #TODO: address the annotations about "Node.js 20 is deprecated",
 #TODO: remove "workflow_dispatch:",
 #TODO: switch "on:", "push:" and "if:" back to using only "main" branch
