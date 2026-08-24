@@ -91,6 +91,7 @@ Why I did it? because it is more precise than "python:3.12-slim" and more clear 
 ------------
 Fixing CI/CD
 ------------
+### docker push failed
 1. What I found:
 In the "Build Image" job in the "Build and push" step, the docker push command failed with:
 ```
@@ -104,4 +105,18 @@ The DECISIONS.md didn't mention it.
 4. What I did, and why?:
 I fixed it by adding the "permissions:" block to the specific required job, that way the docker push command has the necessary permissions to finish the action while this write permission is scoped only to that job instead of editing the global GitHub Actions settings, which is a production best practice.
 Why I did it? because without this permission, the docker push command failed, and I scoped it to only this job in order to follow and keep security best practices where open permissions are allowed only to what need it.
+
+### Job dependencies & docker image tag best practice
+1. What I found:
+The "test", "security-scan" and "deploy" jobs in ci.yml are all needing "build" job, while the best practice is to make "deploy" job wait for the "test" and "security-scan" jobs to finish first.
+The docker image built with a tag "latest" which is not production-ready. 
+2. Classification:
+This is something that Needs Improvement.
+3. Contractor's reasoning:
+The DECISIONS.md didn't mention it.
+4. What I did, and why?:
+I modified it by replacing the "needs:" in the "deploy" job from "build" to "test, security-scan".
+I modified it by replacing the "tags:" in the "build" job from "...:latest" to "...:${{ github.run_number }}".
+Why I did it? because that way, the "deploy" job is waiting until both "test" and "security-scan" jobs finished successfully and only then it runs.
+because that way, each run of this workflow indentify separately, that way we can trace back each instance of that workflow.
 

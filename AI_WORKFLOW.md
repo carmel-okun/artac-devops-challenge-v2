@@ -163,4 +163,6 @@ total: 7 hours
 (optimizing the Dockerfile - 4 hours)
 
 24/8/26
-9:31 - 
+9:31 - 12:00
+13:10 - 
+(fixing CI/CD)
