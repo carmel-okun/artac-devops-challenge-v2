@@ -61,6 +61,32 @@ can we combine some layers maybe?
 
 - ok now I was to address the CI/CD flow we currently have, in the repo I have the file .github/workflows/ci.yml, my knowledge in only with groovy files in Jenkins, explain to me how it works for GitHub, is the directory .github/workflows is a convention for the CI/CD files in a GitHub repo? how do I run it? where? and explain to me the syntax of the ci.yml file, I see "uses: actions/checkout@v4" and "uses: docker/setup-buildx-action@v3" and more
 
+- ok I ran my ci.yml:
+```
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+...
+```
+and when it tried to push I got:
+```
+Error: buildx failed with: ERROR: failed to build: failed to solve: failed to push ghcr.io/carmel-okun/artac-devops-challenge-v2:latest: denied: installation not allowed to Create organization package
+```
+could it be because in this step:
+```
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+```
+the secret.GITHUB_TOKEN is not actually resolved to anything since i didn't set any secrets in the settings --> secrets and variables --> actions?
+
 ----------------------------------------------------------------------------
 Example where AI gave me something wrong or suboptimal, and how I caught it:
 ----------------------------------------------------------------------------
