@@ -152,3 +152,23 @@ Why I did it? because when I tried to set the instance type to t2.micro "terrafo
 Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 8f72860c-62c6-4e68-ad70-64cf4448767f, api error InvalidParameterCombination: The specified instance type is not eligible for Free Tier. For a list of Free Tier instance types, run 'describe-instance-types' with the filter 'free-tier-eligible=true'.
 ```
 
+### Adding user ubuntu to docker group
+1. What I found:
+The given user-data.sh configure docker but not adding the default user to docker group, so each docker command will need to use "sudo".
+2. Classification:
+This is something that Needs Improvement.
+3. Contractor's reasoning:
+The DECISIONS.md didn't mention it.
+4. What I did, and why?:
+I fixed it by adding:
+```
+DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1) || true
+if [ -n "$DEFAULT_USER" ]; then
+  usermod -aG docker "$DEFAULT_USER"
+else
+  echo "WARNING: could not determine default user for uid 1000, skipping docker group add"
+fi
+```
+to user-data.sh right after installing docker.
+Why I did it? because otherwise each docker command will need to use "sudo".
+

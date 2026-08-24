@@ -12,6 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   EC2_IP: "98.91.235.113"
   APP_PORT: 8080
+  APP_NAME: sentiment-api
 
 jobs:
   build:
@@ -94,10 +95,18 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
+            IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
             docker ps
-            sudo docker ps
-            sudo docker images
-            sudo docker info
+            docker images
+            docker stop ${{ APP_NAME }} || true
+            docker rm ${{ APP_NAME }} || true
+            docker image prune -af --filter "until=24h"
+            docker pull $IMAGE
+            docker run -d \
+              --name ${{ APP_NAME }} \
+              --restart unless-stopped \
+              -p ${{ env.APP_PORT }}:${{ env.APP_PORT }} \
+              $IMAGE
 
 
 #TODO: try to wire the output of terraform to the env.EC2_IP
