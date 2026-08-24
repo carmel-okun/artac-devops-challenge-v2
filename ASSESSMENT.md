@@ -131,3 +131,24 @@ The DECISIONS.md mention the use of this configuration and I agree with their ra
 I kept it as is, although if we decide to for example, keep track on those findings, it is possible to remove that configuration and instead use a ".trivyignore" file with a list of CVE IDs (along with a name and a comment/reference) we already encountered and automatically add each new one to the list, this way we keep those findings documented while allowing a clear CI/CD flow.
 Why I did it? because there's no reason to block CI on unfixable issues.
 
+--------------------------
+Fixing Infrastructure (TF)
+--------------------------
+### Instance Type
+1. What I found:
+The given instance type "t2.micro" is not eligible for Free Tier.
+2. Classification:
+This is a Bug/something that Needs Improvement.
+3. Contractor's reasoning:
+The DECISIONS.md didn't mention it.
+4. What I did, and why?:
+I fixed it by retrieving the list of Free Tier instance types with the command:
+```
+aws ec2 describe-instance-types --filters "Name=free-tier-eligible, Values=true" --query "InstanceTypes[].InstanceType" --output table
+```
+and decided to use the instance type "t3.micro" which is in this list.
+Why I did it? because when I tried to set the instance type to t2.micro "terraform apply" failed with the error:
+```
+Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 8f72860c-62c6-4e68-ad70-64cf4448767f, api error InvalidParameterCombination: The specified instance type is not eligible for Free Tier. For a list of Free Tier instance types, run 'describe-instance-types' with the filter 'free-tier-eligible=true'.
+```
+

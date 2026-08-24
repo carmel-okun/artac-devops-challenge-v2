@@ -23,3 +23,8 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
