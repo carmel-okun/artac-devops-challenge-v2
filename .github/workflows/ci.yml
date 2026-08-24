@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [Part-3--Production-Ready-Deployment-(15%)]
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
