@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [Part-3--Production-Ready-Deployment-(15%)]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -76,7 +76,7 @@ jobs:
           image-ref: ${{ env.IMAGE_NAME }}:scan
           format: table
           exit-code: 1
-          ignore-unfixed: true
+          # ignore-unfixed: true
           severity: CRITICAL
 
   deploy:
