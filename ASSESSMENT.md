@@ -48,7 +48,7 @@ This is a BUG
 The DECISIONS.md mentioned the pinned scikit-learn version to 1.6.1 for stability, I disagree with their rationale since it breaks the functionality of /predict endpoint which is the essence of the app
 
 4. What I did, and why?:
-Since the bug is in the code side I fixed it by asking Claude if I'm right about the source of the issue being the scikit-learn version in requirements.txt, and how should I mitigate it, then I tried to pin the version to 1.8.0 as implied in the WARNs in the container logs, tested it and it works!
+Since the bug is in the code side I fixed it by asking Claude if I'm right about the source of the issue being the scikit-learn version in requirements.txt, and how should I remediate it, then I tried to pin the version to 1.8.0 as implied in the WARNs in the container logs, tested it and it works!
 Why I did it? because the /predict endpoint doesn't work otherwise
 
 -------------------------
@@ -119,4 +119,15 @@ I modified it by replacing the "needs:" in the "deploy" job from "build" to "tes
 I modified it by replacing the "tags:" in the "build" job from "...:latest" to "...:${{ github.run_number }}".
 Why I did it? because that way, the "deploy" job is waiting until both "test" and "security-scan" jobs finished successfully and only then it runs.
 because that way, each run of this workflow indentify separately, that way we can trace back each instance of that workflow.
+
+### Trivy Configuration
+1. What I found:
+The configuration "ignore-unfixed: true" is suppressing vulnerabilities that are impossible to remediate right now, the findings were in perl-base (3 findings), a package that comes bundled with the "python:3.12-slim" Debian base image, who has no available patchs at the moment.
+2. Classification:
+This is an Intentional Trade-off.
+3. Contractor's reasoning:
+The DECISIONS.md mention the use of this configuration and I agree with their rationale because there is currently nothing we could upgrade to that would resolve these vulnerabilities, even if we wanted to.
+4. What I did, and why?:
+I kept it as is, although if we decide to for example, keep track on those findings, it is possible to remove that configuration and instead use a ".trivyignore" file with a list of CVE IDs (along with a name and a comment/reference) we already encountered and automatically add each new one to the list, this way we keep those findings documented while allowing a clear CI/CD flow.
+Why I did it? because there's no reason to block CI on unfixable issues.
 
